@@ -14,14 +14,21 @@ $app = new Silly\Application();
 $climate = new \League\CLImate\CLImate;
 
 $app->command('create-project [theme]', function(string $theme) use($climate) {
-    $getwp = GetWP();
-    if($getwp['success']) $climate->green($getwp['message']);
+    $task = GetWP();
+    if($task['success']) $climate->green($task['message']);
 
-    $unzip = Unzip('latest.zip', $theme);
-    if($unzip['success']) $climate->green($unzip['message']);
+    $task = Unzip('latest.zip', $theme);
+    if($task['success']) $climate->green($task['message']);
 
-    $getrepo = GetRepo($theme);
-    if($getrepo['success']) $climate->green($getrepo['message']);
+    $task = GetRepo($theme);
+    if($task['success']) $climate->green($task['message']);
+
+    exec('rm -rf latest.zip');
+});
+
+$app->command('clean', function() {
+    exec('rm -rf latest.zip');
+    exec('rm -rf mysite');
 });
 
 $app->run();
