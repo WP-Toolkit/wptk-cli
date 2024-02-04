@@ -17,7 +17,7 @@ $app->command('create-project [theme]', function(string $theme) use($climate) {
     $getwp = GetWP();
     if($getwp['success']) $climate->green($getwp['message']);
 
-    $unzip = Unzip('latest.zip');
+    $unzip = Unzip('latest.zip', $theme);
     if($unzip['success']) $climate->green($unzip['message']);
 
     $getrepo = GetRepo($theme);

@@ -24,8 +24,8 @@ function GetWP(): array {
     }
 }
 
-function Unzip(string $archive) {
-    $cmd = 'unzip ' . $archive;
+function Unzip(string $archive, string $folder) {
+    $cmd = 'unzip ' . $archive . ' -d ' . $folder;
     exec($cmd, $output, $rv);
 
     if($rv === 0) {
@@ -38,7 +38,7 @@ function Unzip(string $archive) {
 
 function GetRepo(string $theme): array {
     $url = 'https://github.com/WP-Toolkit/wptk-theme.git';
-    $path = 'wordpress/wp-content/themes/' . $theme;
+    $path = $theme . '/wordpress/wp-content/themes/' . $theme;
     $cmd = 'git clone ' . $url . ' ' . $path . ' 2>&1';
 
     exec($cmd, $output, $rv);
