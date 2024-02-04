@@ -1,0 +1,10 @@
+{
+    "require": {
+        "mnapoli/silly": "^1.9",
+        "jolicode/jolinotif": "^2.6",
+        "league/climate": "^3.8"
+    },
+    "autoload": {
+        "files": ["functions.php"]
+    }
+}
