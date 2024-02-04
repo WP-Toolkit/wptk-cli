@@ -9,6 +9,7 @@ function Res(bool $type, string $msg, array $output): array {
         'output' => implode("\n", $output)
     ];
 }
+
 function SystemExec(string $cmd, string $success, string $error): array {
     exec($cmd, $output, $rv);
 
