@@ -6,15 +6,12 @@ if(php_sapi_name() !== 'cli') {
 
 require __DIR__ . '/vendor/autoload.php';
 
-use function Util\GetRepo;
-use function Util\GetWP;
 use function Util\SystemExec;
-use function Util\Unzip;
 
 $app = new Silly\Application();
 $climate = new \League\CLImate\CLImate;
 
-$app->command('create-project [theme]', function(string $theme) use($climate) {
+$app->command('new [theme]', function(string $theme) use($climate) {
     $task = SystemExec(
         'wget https://wordpress.org/latest.zip 2>&1', 
         'WordPress downloaded successfully.', 
@@ -44,6 +41,17 @@ $app->command('create-project [theme]', function(string $theme) use($climate) {
         'rm -rf latest.zip',
         'Cleaned up dir',
         'Error cleaning dir'
+    );
+    if($task['success']) $climate->green($task['message']);
+});
+
+$app->command('serve [theme] [port]', function(string $theme, string $port) use($climate) {
+    $path = $theme . '/wordpress/';
+    $cmd = 'php -S localhost:' . $port . ' -t ' . $path;
+    $task = SystemExec(
+        $cmd,
+        'Running local dev server...',
+        'Error running local dev server'
     );
     if($task['success']) $climate->green($task['message']);
 });
