@@ -10,13 +10,15 @@ function Res(bool $type, string $msg, array $output): array {
     ];
 }
 
-function SystemExec(string $cmd, string $success, string $error): array {
+function SystemExec(string $cmd, string $success, string $error, mixed $climate): mixed {
     exec($cmd, $output, $rv);
 
     if($rv === 0) {
-        return Res(true, $success, $output);
+        $res = Res(true, $success, $output);
+        return $climate->green($res['message']);
     }
     else {
-        return Res(false, $error, $output);
+        $res = Res(false, $error, $output);
+        return $climate->red("\nError: " . $res['message']);
     }
 }

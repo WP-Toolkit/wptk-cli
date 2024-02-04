@@ -12,48 +12,48 @@ $app = new Silly\Application();
 $climate = new \League\CLImate\CLImate;
 
 $app->command('new [theme]', function(string $theme) use($climate) {
-    $task = SystemExec(
+    SystemExec(
         'wget https://wordpress.org/latest.zip 2>&1', 
         'WordPress downloaded successfully.', 
-        'Error downloading WordPress.'
+        'Error downloading WordPress.',
+        $climate
     );
-    if($task['success']) $climate->green($task['message']);
 
     $cmd = 'unzip latest.zip -d ' . $theme . ' 2>&1';
-    $task = SystemExec(
+    SystemExec(
         $cmd, 
         'Extracted WordPress successfully.', 
-        'Error extracting WordPress.'
+        'Error extracting WordPress.',
+        $climate
     );
-    if($task['success']) $climate->green($task['message']);
 
     $url = 'https://github.com/WP-Toolkit/wptk-theme.git';
     $path = $theme . '/wordpress/wp-content/themes/' . $theme;
     $cmd = 'git clone ' . $url . ' ' . $path . ' 2>&1';
-    $task = SystemExec(
+    SystemExec(
         $cmd, 
         'Repo cloned successfully.', 
-        'Error cloning repo.'
+        'Error cloning repo.',
+        $climate
     );
-    if($task['success']) $climate->green($task['message']);
 
-    $task = SystemExec(
+    SystemExec(
         'rm -rf latest.zip',
         'Cleaned up dir',
-        'Error cleaning dir'
+        'Error cleaning dir',
+        $climate
     );
-    if($task['success']) $climate->green($task['message']);
 });
 
 $app->command('serve [theme] [port]', function(string $theme, string $port) use($climate) {
     $path = $theme . '/wordpress/';
     $cmd = 'php -S localhost:' . $port . ' -t ' . $path;
-    $task = SystemExec(
+    SystemExec(
         $cmd,
         'Running local dev server...',
-        'Error running local dev server'
+        'Error running local dev server',
+        $climate
     );
-    if($task['success']) $climate->green($task['message']);
 });
 
 /**
