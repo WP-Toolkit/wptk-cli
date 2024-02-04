@@ -8,24 +8,49 @@ require __DIR__ . '/vendor/autoload.php';
 
 use function Util\GetRepo;
 use function Util\GetWP;
+use function Util\SystemExec;
 use function Util\Unzip;
 
 $app = new Silly\Application();
 $climate = new \League\CLImate\CLImate;
 
 $app->command('create-project [theme]', function(string $theme) use($climate) {
-    $task = GetWP();
+    $task = SystemExec(
+        'wget https://wordpress.org/latest.zip 2>&1', 
+        'WordPress downloaded successfully.', 
+        'Error downloading WordPress.'
+    );
     if($task['success']) $climate->green($task['message']);
 
-    $task = Unzip('latest.zip', $theme);
+    $cmd = 'unzip latest.zip -d ' . $theme . ' 2>&1';
+    $task = SystemExec(
+        $cmd, 
+        'Extracted WordPress successfully.', 
+        'Error extracting WordPress.'
+    );
     if($task['success']) $climate->green($task['message']);
 
-    $task = GetRepo($theme);
+    $url = 'https://github.com/WP-Toolkit/wptk-theme.git';
+    $path = $theme . '/wordpress/wp-content/themes/' . $theme;
+    $cmd = 'git clone ' . $url . ' ' . $path . ' 2>&1';
+    $task = SystemExec(
+        $cmd, 
+        'Repo cloned successfully.', 
+        'Error cloning repo.'
+    );
     if($task['success']) $climate->green($task['message']);
 
-    exec('rm -rf latest.zip');
+    $task = SystemExec(
+        'rm -rf latest.zip',
+        'Cleaned up dir',
+        'Error cleaning dir'
+    );
+    if($task['success']) $climate->green($task['message']);
 });
 
+/**
+ * Clean up dev purposes only
+ */
 $app->command('clean', function() {
     exec('rm -rf latest.zip');
     exec('rm -rf mysite');
